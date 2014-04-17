@@ -46,7 +46,7 @@
           </p>
         </section>
 
-        <section>
+        <section data-background="images/middle-ages.png">
           <h2>Easy!</h2>
           <pre><code data-trim class="scala">
 def api(request: HttpRequest): HttpResponse = { 
@@ -58,7 +58,7 @@ def api(request: HttpRequest): HttpResponse = { 
           </aside>
         </section>
 
-        <section>
+        <section data-background="images/mencken.png">
           <h2>For every complex problem there is an answer that is clear, simple, and wrong.</h2>
         </section>
 
@@ -97,7 +97,6 @@ class HelloWorldService extends Actor {
 class HelloWorldServiceSpec 
   extends TestKit(ActorSystem())
   with SpecificationLike with ImplicitSender {
-
   val service = TestActorRef[HelloWorldService]
 
   "Any request" should {
@@ -107,7 +106,6 @@ class HelloWorldServiceSpec
         mustEqual HttpEntity("Hello, world")
     }
   }
-
 }
           </code></pre>
         </section>
@@ -132,19 +130,19 @@ class HelloWorldService extends Actor { ... }
           </code></pre>
         </section>
 
-        <section>
-          <h2>Let's now see...</h2>
+        <section data-background="images/sad-pug.jpg">
+          <h2>Let's see now...</h2>
           <pre class="fragment fade-in"><code data-trim class="scala">
 [INFO] (...) Bound to /0.0.0.0:8080
 [WARN] (...) Configured registration timeout of 1 
              second expired, stopping
           </code></pre>
 
-          <img src="nodatareceived.png" class="fragment fade-in"/>
+          <img src="images/nodatareceived.png" class="fragment fade-in"/>
         </section>
 
-        <section>
-          <img src="flow.png"/>
+        <section data-background="images/blueprint.jpg">
+          <img src="images/flow.png"/>
         </section>
 
         <section>
@@ -164,14 +162,17 @@ class HelloWorldService extends Actor {
           </code></pre>
         </section>
 
-        <section>
+        <section data-background="images/angrymob.jpg">
           <h1>Demo</h1>
         </section>
 
         <section>
           <h2>Convenient DSL</h2>
-          <p>It is tedious to build a complex API by handling the <code>HttpRequest</code>s.</p>
-          <p>Construct Spray <code>Route</code>s using convenient DSL, and then turn these routes to the <code>Receive</code> partial function.</p>
+          <ul>
+            <li>It is tedious to build a complex API by handling the <code>HttpRequest</code>s.</li>
+            <li>Construct Spray <code>Route</code>s using convenient DSL, and then turn these routes to the <code>Receive</code> partial function.</li>
+            <li>Use similar DSL to unit-test the routes</li>
+          </ul>
         </section>
 
         <section>
@@ -222,25 +223,61 @@ class DemoRouteSpec extends Specification
           </code></pre>
         </section>
 
-        <section>
+        <section data-background="images/angrymob.jpg">
           <h1>Demo</h1>
         </section>
 
         <section>
           <h2>More DSL examples</h2>
-          <p>We can match—amongst others—on:</p>
           <ul>
-            <li>HTTP methods: <code>get</code>, <code>post</code>, <code>put</code>, ...,</li>
-            <li>Paths; including path-variables and query parameters:<br/>
-            <code>path("customer" / IntNumber)</code>, <code>parameter('id.as[Int])</code></li>
-            <li>HTTP headers: <code>headerValueByName("User-Agent")</code>,</li>
-            <li>Cookies: <code>cookie("spray")</code></li>
+            <li>We can match—amongst others—on:</li>
+          	<ul>
+                <li>HTTP methods: <code>get</code>, <code>post</code>, <code>put</code>, ...,</li>
+                <li>Paths; including path-variables and query parameters:<br/>
+                <code>path("customer" / IntNumber)</code>, <code>parameter('id.as[Int])</code></li>
+                <li>HTTP headers: <code>headerValueByName("User-Agent")</code>,</li>
+                <li>Cookies: <code>cookie("spray")</code></li>
+            </ul>
+            <li>We combine parts of the DSL using <code>~</code></li>
           </ul>
-          <p>We combine parts of the DSL using <code>~</code></p>
+        </section>
+
+        <section data-background="images/angrymob.jpg">
+          <h1>Demo</h1>
         </section>
 
         <section>
-          <h1>Demo</h1>
+          <h2>Completing</h2>
+          <p>To <em>complete</em> a route, we must provide <code>RequestContext => ()</code>. <code>complete</code> does just that, or we can do it ourselves.</p>
+          <pre><code data-trim class="scala">
+trait TweetAnalysisRoute extends Directives {
+
+  val tweetAnalysisRoute: Route =
+    post {
+      path("tweets" / Segment) ???
+    }
+}
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Completing</h2>
+          <p>To <em>complete</em> a route, we must provide <code>RequestContext => ()</code>. <code>complete</code> does just that, or we can do it ourselves.</p>
+          <pre><code data-trim class="scala">
+trait TweetAnalysisRoute extends Directives {
+
+  val tweetAnalysisRoute: Route =
+    post { 
+      path("tweets" / Segment)(sendTweetAnalysis) 
+    }
+
+  def sendTweetAnalysis(query: String)
+                       (ctx: RequestContext): Unit = {
+     ctx.receiver ! ChunkedMessageStart(...)
+  }
+  
+}
+          </code></pre>
         </section>
 
         <section>
@@ -255,16 +292,12 @@ class DemoRouteSpec extends Specification
 
         <section>
           <h1>A real app</h1>
-          <img src="uk.png"/>
+          <img src="images/uk.png"/>
         </section>
 
-        <section>
-          <h1>A real app</h1>
-          <img src="tweetanalyser.png"/>
-        </section>
-
-        <section>
+        <section data-background="images/angrymob.jpg">
           <h1>Demo</h1>
+          <img src="images/tweetanalyser.png"/>
         </section>
 
         <section>
